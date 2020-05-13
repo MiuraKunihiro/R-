@@ -1,0 +1,40 @@
+#Kaggleで配布されているTitanic号の乗船者データの内機械学習のトレーニングデータを読み込む
+#読み込む際にnullをNAに置き換える
+> train_path <- '/Users/kunihiro/Downloads/train.csv'
+> train <- read.csv(train_path, stringsAsFactors = F,na.strings=(c("NA", "")))
+
+#中身を見てみる
+> library(formattable)
+> formattable(train[1:5,])
+
+#乗船者の年齢について考察する
+#行数を数えてみる
+> sum(table(train$PassengerId))
+[1] 891
+
+#乗船者の年齢について、欠損値の数を数える
+> x <- train$Age
+> sum(is.na(x))
+[1] 177
+
+#年齢の欠損値全体の中央値と置き換えてみる
+>x_impute_median <- sapply(x, function(a) ifelse(is.na(a),median(x,na.rm = TRUE),a))
+
+#置き換え処理以前と以後を縦軸を密度としたヒストグラムで比較する
+>hist(x,breaks = 15,freq = FALSE, xlab = "Age", main = "Histogram of x & x_impute_median", col = rgb(0, 0, 0.7, alpha = 0.4))
+>hist(x_impute_median,breaks = 15,freq = FALSE, col = rgb(0.6, 0, 0.2, alpha = 0.4), add = TRUE)
+> colors = c(rgb(0, 0, 0.7, alpha = 0.4), rgb(0.6, 0, 0.2, alpha = 0.4))
+> labels <- c("x", "x_impute_median")
+> legend("topright", legend = labels, col = colors, pch = 15, cex = 1)
+
+#年齢の欠損値を０以上８０以下のランダムな値で置き換えてみる
+> x_impute_random <- sapply(x, function(a) ifelse(is.na(a),sample(0:80,1),a))
+
+#置き換え処理以前と以後を縦軸を密度としたヒストグラムで比較する
+>hist(x,breaks = 15,freq = FALSE, xlab = "Age", main = "Histogram of x & x_impute_random", col = rgb(0, 0, 0.7, alpha = 0.4))
+>hist(x_impute_random,breaks = 15,freq = FALSE, col = rgb(0, 0.5, 0.1, alpha = 0.4), add = TRUE)
+> colors = c(rgb(0, 0, 0.7, alpha = 0.4), rgb(0, 0.5, 0.1, alpha = 0.4))
+> labels <- c("x", "x_impute_random")
+> legend("topright", legend = labels, col = colors, pch = 15, cex = 1)
+
+                            
