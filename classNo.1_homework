@@ -37,4 +37,5 @@
 > labels <- c("x", "x_impute_random")
 > legend("topright", legend = labels, col = colors, pch = 15, cex = 1)
 
+#testestes
                             
